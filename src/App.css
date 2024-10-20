@@ -1,0 +1,242 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.createAccount{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-direction: column;
+  gap: 10px;
+  height: 100vh;
+}
+
+.createAccountInput, .createAccountInput::placeholder {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  background-color: #282c34;
+  color: #fff;
+  padding-left: 5px;
+}
+.createAccountButton {
+  background-color: bisque;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: all ease .1s;
+}
+.createAccountButton:hover{
+  background-color: #d9e0bc;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.balanceInfo{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.info{
+  width: 640px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 12px;
+  margin-inline: 30px;
+  background-color: #B0B0B0;
+}
+.info > form,p,h1,h2{
+  color: #000000;
+  padding: 0;
+  margin: 0;
+}
+.idHeader, nameHeader{
+  font-size: 20px;
+}
+
+.amountValue{
+  color: #000000;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.idValue, nameValue{
+  color: #000000;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.actions{
+  margin-top: 10px;
+  width: 660px;
+}
+
+.actionButtons{
+  display: flex;
+  justify-content: space-between;
+  background-color: #B0B0B0;
+  padding-top: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-inline: 10px;
+}
+.actionButton {
+  background-color: #5bc0eb;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: all ease .1s;
+  font-size: 18px;
+}
+
+.actionButton:hover{
+  background-color: #8ed0ed;
+}
+
+.actionInput{
+  padding: 5px;
+  border: none;
+  background-color: #282c34;
+  color: #fff;
+  font-size: 16px;
+}
+.selectedAction{
+  display: flex;
+  flex-direction: column;
+  background-color: #B0B0B0;
+  height: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all ease .1s;
+  padding: 10px;
+}
+.selectedAction.active{
+  height: 200px;
+}
+
+.withdrawFunds, .transferFunds, .addFunds{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.selectedAction > p, span {
+  align-self: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+.createActionButton{
+  font-size: 16px;
+  border: none;
+  color: #000;
+  background-color: #5BC0EB;
+  padding: 10px;
+  align-self: center;
+  border-radius: 10px;
+  font-weight: 400;
+}
+
+.actionInput{
+  width: 250px;
+  align-self: center;
+  border-radius: 10px;
+}
+
+.transferFunds{
+  align-items: center; 
+}
+
+.transferFundsInput{
+  display: flex;
+  align-items: flex-end;
+  width: 300px;
+  justify-content: space-between;
+}
+.ml{
+  width: 70px;
+}
+
+.createActionButton:hover{
+  cursor: pointer;
+  background-color: #8ed0ed;
+}
+.historyWrapper{
+  margin-top: 10px;
+  width: 640px;
+  background-color: #B0B0B0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.historyItem{
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  height: 50px;
+}
+
+.historyAmount{
+  min-width: 60px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.historyTransfer{
+  flex-grow: 1;}
+
+.historyKind{
+  min-width: 140px;
+}
+
+.hhh{
+  background-color: #6c6e73;
+}
