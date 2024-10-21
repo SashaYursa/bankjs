@@ -1,11 +1,11 @@
 import React from 'react'
 import { transactions } from '../screens/Info'
 
-export default function History({ historyItems }: { historyItems: transactions }) {
+export default function History({ historyItems, id }: { historyItems: transactions, id: number }) {
   return (
     <div className='historyWrapper'>
       {historyItems ? historyItems.map((item, index) => {
-        const isIncrease = item.type === "deposite" ? true : item.type === "transfer" ? item.from ? true : false : false
+        const isIncrease = item.type === "deposite" ? true : item.type === "transfer" ? item.from === id ? false : true : false
         return (
           <div key={index} className={`historyItem ${index % 2 === 0 ? 'hhh' : ''}`}>
             <div className='historyAmount' style={{ color: `${isIncrease ? "#2aff4a" : 'red'}` }}>
@@ -14,7 +14,7 @@ export default function History({ historyItems }: { historyItems: transactions }
             <div className='historyTransfer'>
               {
                 item.type === "transfer" ?
-                  <span>{item.from ? `Отримано від ${item.from}` : `Надіслано до ${item.to}`}</span> : <></>
+                  <span>{item.from !== id ? `Отримано від ${item.from}` : `Надіслано до ${item.to}`}</span> : <></>
               }
             </div>
             <div className='historyKind'>

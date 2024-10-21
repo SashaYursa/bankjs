@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function TransferFunds() {
+export default function TransferFunds({ transferFunds, isTransfered }: { transferFunds: (value: number, accountId: number) => void, isTransfered: boolean | undefined }) {
   const [transferId, setTransferId] = useState(0)
   const [value, setValue] = useState(0)
   return (
@@ -14,7 +14,9 @@ export default function TransferFunds() {
         <span className='ml'>Сума</span>
         <input className='actionInput' type='number' value={value} onChange={(e) => setValue(Number(e.target.value))} />
       </div>
-      <button className='transferFundsButton createActionButton'>Перевести</button>
+      <button className='transferFundsButton createActionButton' onClick={() => transferFunds(value, transferId)}>Перевести</button>
+      <span style={isTransfered ? { color: 'green' } : { color: 'red' }}>{isTransfered ? "Успішно" : isTransfered === false ? "Не переведено" : ""}</span>
+
     </div>
   )
 }

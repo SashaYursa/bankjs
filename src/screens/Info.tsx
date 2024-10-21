@@ -3,7 +3,7 @@ import AddFunds from '../components/AddFunds'
 import WithdrawFunds from '../components/WithdrawFunds'
 import TransferFunds from '../components/TransferFunds'
 import History from '../components/History'
-import { SERVER_ACCOUNT, SERVER_ADD_FUNDS } from '../env'
+import { SERVER_ACCOUNT, SERVER_ADD_FUNDS, SERVER_TRANSFER_FUNDS, SERVER_WITHDRAW_FUNDS } from '../env'
 import { DNA } from 'react-loader-spinner'
 
 export type transactions = {
@@ -22,42 +22,10 @@ export default function Info({ id }: { id: number }) {
     name: string,
     transactions: transactions
   }>();
-  // const [database, setDatabase] = useState<{
-  //   balance: number,
-  //   name: string,
-  //   transactions: transactions
-  // }>({
-  //   balance: 100,
-  //   name: 'alex',
-  //   transactions: [
-  //     {
-  //       type: 'deposite',
-  //       to: null,
-  //       from: null,
-  //       amount: 50
-  //     },
-  //     {
-  //       type: 'withdraw',
-  //       to: null,
-  //       from: null,
-  //       amount: 21.13
-  //     },
-  //     {
-  //       type: 'transfer',
-  //       to: 43535,
-  //       from: null,
-  //       amount: 55
-  //     },
-  //     {
-  //       type: 'transfer',
-  //       to: null,
-  //       from: 234234,
-  //       amount: 44
-  //     },
-  //   ]
-  // })
 
   const [selectedAction, setSelectedAction] = useState<action | null>(null)
+  const [isWithdrawed, setIsWithdrawed] = useState<boolean>()
+  const [isTransfered, setIsTransfered] = useState<boolean>()
 
   useEffect(() => {
     fetch(SERVER_ACCOUNT + "?id=" + id).then(res => res.json()).then(data => setAccount(data))
@@ -68,7 +36,7 @@ export default function Info({ id }: { id: number }) {
     if (account?.transactions.length) {
       const tr = account.transactions[0];
       if (tr.type === 'deposite') return true
-      if (tr.type === 'transfer' && tr.from) return true
+      if (tr.type === 'transfer' && tr.from !== id) return true
     }
     return false
   }
@@ -83,43 +51,87 @@ export default function Info({ id }: { id: number }) {
         id, funds: value
       })
     }).then(data => {
-      if (data.ok) {
-        setAccount(acc => {
-          if (!acc) return
-          return ({
-            ...acc,
-            transactions: [
-              ...acc?.transactions,
-              {
-                amount: value,
-                from: null,
-                to: id,
-                type: 'deposite'
-              }
-            ]
-          })
+      if (!data.ok || !account) {
+        return
+      }
+      setAccount({
+        ...account,
+        funds: account.funds + value,
+        transactions: [
+          {
+            amount: value,
+            from: null,
+            to: id,
+            type: 'deposite'
+          },
+          ...account?.transactions,
+        ]
+      }
+      )
+    })
+  }
+  const withdrawFunds = (value: number) => {
+    if (!account?.funds || account.funds < value) setIsWithdrawed(false)
+    fetch(SERVER_WITHDRAW_FUNDS, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, funds: value })
+    }).then(data => {
+      if (data.ok && account) {
+        setAccount({
+          ...account,
+          funds: account.funds - value,
+          transactions: [
+            {
+              amount: value,
+              from: null,
+              to: null,
+              type: 'withdraw'
+            },
+            ...account?.transactions,
+          ]
         })
+        setIsWithdrawed(true)
       }
     })
-    // setDatabase({
-    //   ...database,
-    //   transactions: [
-    //     ...database.transactions,
-    //     {
-    //       amount: value,
-    //       from: null,
-    //       to: null,
-    //       type: 'deposite'
-    //     }
-    //   ]
-    // })
   }
+  const transferFunds = (value: number, accountId: number) => {
+    if (!account?.funds || account.funds < value && accountId) setIsTransfered(false)
+    fetch(SERVER_TRANSFER_FUNDS, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, funds: value, transferId: accountId })
+    }).then(data => {
+      if (data.status === 404) {
+        setIsTransfered(false)
+      }
+      if (data.ok && account) {
+        setAccount({
+          ...account,
+          funds: account.funds - value,
+          transactions: [
+            {
+              amount: value,
+              from: id,
+              to: accountId,
+              type: 'transfer'
+            },
+            ...account?.transactions,
+          ]
+        })
+        setIsTransfered(true)
+      }
+    })
+  }
+
   if (!account) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
       <DNA />
     </div>)
-
-  console.log({ account })
 
   return (
     <div className='balanceInfo'>
@@ -160,14 +172,14 @@ export default function Info({ id }: { id: number }) {
           {selectedAction === "deposite" ?
             <AddFunds addFund={addFund} />
             : selectedAction === "withdraw" ?
-              <WithdrawFunds />
+              <WithdrawFunds withdrawFunds={withdrawFunds} isWithdrawed={isWithdrawed} />
               : selectedAction === "transfer" ?
-                <TransferFunds /> : <></>
+                <TransferFunds transferFunds={transferFunds} isTransfered={isTransfered} /> : <></>
           }
         </div>
       </div>
       <div className='history'>
-        <History historyItems={account.transactions} />
+        <History id={id} historyItems={account.transactions} />
       </div>
     </div>
   )
